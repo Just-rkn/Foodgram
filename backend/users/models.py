@@ -52,15 +52,15 @@ class Subscription(models.Model):
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
         indexes = [
-            models.Index(fields=('follower', 'author'), name='follow'),
+            models.Index(fields=('user', 'author'), name='follow'),
         ]
         constraints = [
             models.UniqueConstraint(
-                fields=('follower', 'author'),
+                fields=('user', 'author'),
                 name='unique_follow'
             ),
             models.CheckConstraint(
-                check=~Q(author=F('follower')),
-                name='follower_not_author'
+                check=~Q(author=F('user')),
+                name='user_not_author'
             ),
         ]
