@@ -119,7 +119,7 @@ class CreateRecipeIngredientSerializer(serializers.ModelSerializer):
 class RecipeSerializer(serializers.ModelSerializer):
     '''Сериализатор рецептов.'''
 
-    tags = TagSerializer(many=True)
+    tags = TagSerializer(many=True, queryset=Tag.objects.all())
     author = UserSerializer()
     ingredients = RecipeIngredientSerializer(many=True)
     is_favorited = serializers.SerializerMethodField()
