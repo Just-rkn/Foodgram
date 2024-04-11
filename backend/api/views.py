@@ -12,7 +12,8 @@ from .permissions import IsAuthorPermission
 from .serializers import (CreateRecipeSerializer, IngredientSerializer,
                           RecipeSerializer, ShortRecipeSerializer,
                           SubscribeSerializer, TagSerializer, UserSerializer)
-from recipes.models import Favorite, Ingredient, Recipe, ShoppingCart, Tag
+from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
+                            ShoppingCart, Tag)
 from users.models import Subscription, User
 
 
@@ -29,6 +30,7 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
 
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
+    pagination_class = None
     filter_backends = (DjangoFilterBackend,)
     filterset_class = IngredientFilter
 
@@ -101,7 +103,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             queryset.create(user=request.user, recipe=recipe).save()
             serializer = ShortRecipeSerializer(recipe)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        if queryset.filter(user=request.user, recipe=recipe).exists():
+        if not queryset.filter(user=request.user, recipe=recipe).exists():
             return Response(
                 {'errors': 'Рецепт не был добавлен изначально.'},
                 status=status.HTTP_400_BAD_REQUEST
@@ -138,23 +140,23 @@ class RecipeViewSet(viewsets.ModelViewSet):
         permission_classes=(permissions.IsAuthenticated,)
     )
     def download_shopping_cart(self, request):
-        ingredients = (
-            ShoppingCart.objects.filter(user=request.user)
-            .values("recipe")
-            .values_list(
-                "recipe__ingredients__name",
-                "recipe__ingredients__measurement_unit",
-            )
-            .annotate(total_amount=Sum("recipe__ingredientes__amount"))
-        )
+        ingredients = RecipeIngredient.objects.filter(
+            recipe__shopping_cart__user=request.user
+        ).values(
+            'ingredient__name',
+            'ingredient__measurement_unit'
+        ).annotate(amount=Sum('amount'))
+
         shopping_list = ['Список покупок\n']
 
         for ingredient in ingredients:
             shopping_list.append(
-                f'{ingredient[0]} - {ingredient[2]} ({ingredient[1]})\n'
+                f'{ingredient["ingredient__name"]} - '
+                f'{ingredient["amount"]} '
+                f'({ingredient["ingredient__measurement_unit"]})\n'
             )
-        response = HttpResponse(shopping_list, content_type="text/plain")
-        response["Content-Disposition"] = (
+        response = HttpResponse(shopping_list, content_type='text/plain')
+        response['Content-Disposition'] = (
             'attachment; filename="shopping_list.txt"'
         )
         return response

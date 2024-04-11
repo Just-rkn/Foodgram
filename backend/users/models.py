@@ -11,6 +11,7 @@ class User(AbstractUser):
     email = models.EmailField('Почта', unique=True)
     first_name = models.CharField('имя', max_length=MAX_LENGTH_NAME)
     last_name = models.CharField('фамилия', max_length=MAX_LENGTH_NAME)
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ('username', 'first_name', 'last_name',)
 
@@ -31,7 +32,7 @@ class User(AbstractUser):
 class Subscription(models.Model):
     '''Модель подписок.'''
 
-    follower = models.ForeignKey(
+    user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='follower',

@@ -1,6 +1,6 @@
 # praktikum_new_diplom
 
-# superuser_data_for_admin
+# data_for_admin
 email goga@g.com
 password goga
 

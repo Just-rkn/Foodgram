@@ -91,7 +91,7 @@ class Recipe(BaseNameModel):
     ingredients = models.ManyToManyField(
         Ingredient,
         through='RecipeIngredient',
-        related_name='in_recipes',
+        related_name='recipes_list',
         verbose_name='Ингредиенты'
     )
 
@@ -111,7 +111,7 @@ class RecipeIngredient(models.Model):
         Recipe,
         on_delete=models.CASCADE,
         verbose_name='Рецепт',
-        related_name='ingredients'
+        related_name='ingredient_list'
     )
     ingredient = models.ForeignKey(
         Ingredient,
@@ -151,7 +151,7 @@ class Favorite(models.Model):
         Recipe,
         on_delete=models.CASCADE,
         verbose_name='Рецепт',
-        related_name='in_favorites'
+        related_name='favorites'
     )
 
     def __str__(self) -> str:
@@ -180,7 +180,7 @@ class ShoppingCart(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='in_shopping_cart',
+        related_name='shopping_cart',
         verbose_name='Рецепт'
     )
 
