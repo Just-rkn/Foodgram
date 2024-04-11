@@ -101,7 +101,7 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
 class CreateRecipeIngredientSerializer(serializers.ModelSerializer):
     '''Сериализатор создании ингредиентов в рецепте.'''
 
-    id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
+    id = serializers.IntegerField(write_only=True)
     amount = serializers.IntegerField()
 
     def validate_amount(self, value):
@@ -119,7 +119,7 @@ class CreateRecipeIngredientSerializer(serializers.ModelSerializer):
 class RecipeSerializer(serializers.ModelSerializer):
     '''Сериализатор рецептов.'''
 
-    tags = TagSerializer(many=True, queryset=Tag.objects.all())
+    tags = TagSerializer(many=True, read_only=True)
     author = UserSerializer()
     ingredients = RecipeIngredientSerializer(many=True)
     is_favorited = serializers.SerializerMethodField()
