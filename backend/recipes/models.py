@@ -88,6 +88,12 @@ class Recipe(BaseNameModel):
         related_name='recipes',
         verbose_name='Теги'
     )
+    ingredients = models.ManyToManyField(
+        Ingredient,
+        through='RecipeIngredient',
+        related_name='in_recipes',
+        verbose_name='Ингредиенты'
+    )
 
     def __str__(self) -> str:
         return self.name
