@@ -6,7 +6,7 @@ MAX_LENGTH_NAME = 150
 
 
 class User(AbstractUser):
-    '''Модель пользователя.'''
+    """Модель пользователя."""
 
     email = models.EmailField('Почта', unique=True)
     first_name = models.CharField('имя', max_length=MAX_LENGTH_NAME)
@@ -30,7 +30,7 @@ class User(AbstractUser):
 
 
 class Subscription(models.Model):
-    '''Модель подписок.'''
+    """Модель подписок."""
 
     user = models.ForeignKey(
         User,

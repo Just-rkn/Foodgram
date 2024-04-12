@@ -5,7 +5,7 @@ from .models import Subscription, User
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    '''Отображение модели User в админ части сайта.'''
+    """Отображение модели User в админ части сайта."""
 
     list_display = (
         'username',
@@ -29,7 +29,7 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Subscription)
 class SubscriptionAdmin(admin.ModelAdmin):
-    '''Отображение модели Subscription в админ части сайта.'''
+    """Отображение модели Subscription в админ части сайта."""
 
     list_display = ('user', 'author')
     search_fields = ('user', 'author')

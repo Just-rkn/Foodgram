@@ -2,9 +2,9 @@ from rest_framework.permissions import SAFE_METHODS, BasePermission
 
 
 class IsAuthorPermission(BasePermission):
-    '''Permission с правами доступа только если запрос безопасный
+    """Permission с правами доступа только если запрос безопасный
     или пользователь является автором.
-    '''
+    """
 
     def has_permission(self, request, view):
         return (

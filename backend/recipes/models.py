@@ -10,7 +10,7 @@ LONG_LENGTH: int = 200
 
 
 class BaseNameModel(models.Model):
-    '''Абстрактная модель для добавления поля name.'''
+    """Абстрактная модель для добавления поля name."""
 
     name = models.CharField(
         'Название', max_length=LONG_LENGTH
@@ -21,7 +21,7 @@ class BaseNameModel(models.Model):
 
 
 class Tag(BaseNameModel):
-    '''Модель тегов.'''
+    """Модель тегов."""
 
     slug = models.SlugField(
         'Слаг', max_length=LONG_LENGTH, unique=True
@@ -42,7 +42,7 @@ class Tag(BaseNameModel):
 
 
 class Ingredient(BaseNameModel):
-    '''Модель ингредиентов.'''
+    """Модель ингредиентов."""
 
     measurement_unit = models.CharField(
         'Единица измерения', max_length=LONG_LENGTH
@@ -64,7 +64,7 @@ class Ingredient(BaseNameModel):
 
 
 class Recipe(BaseNameModel):
-    '''Модель рецептов.'''
+    """Модель рецептов."""
 
     pub_date = models.DateTimeField(
         'Дата добавления', auto_now_add=True
@@ -105,7 +105,7 @@ class Recipe(BaseNameModel):
 
 
 class RecipeIngredient(models.Model):
-    '''Модель для связи рецептов и ингредиентов.'''
+    """Модель для связи рецептов и ингредиентов."""
 
     recipe = models.ForeignKey(
         Recipe,
@@ -139,7 +139,7 @@ class RecipeIngredient(models.Model):
 
 
 class Favorite(models.Model):
-    '''Модель избранного.'''
+    """Модель избранного."""
 
     user = models.ForeignKey(
         User,
@@ -169,7 +169,7 @@ class Favorite(models.Model):
 
 
 class ShoppingCart(models.Model):
-    '''Модель корзины покупок.'''
+    """Модель корзины покупок."""
 
     user = models.ForeignKey(
         User,

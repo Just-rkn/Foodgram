@@ -4,10 +4,10 @@ from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
-from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 
 from .filters import IngredientFilter, RecipeFilter
+from .pagination import LimitPagePagination
 from .permissions import IsAuthorPermission
 from .serializers import (CreateRecipeSerializer, IngredientSerializer,
                           RecipeSerializer, ShortRecipeSerializer,
@@ -68,14 +68,16 @@ class UserViewSet(viewsets.GenericViewSet):
     )
     def subscriptions(self, request):
         queryset = Subscription.objects.filter(user=request.user)
-        paginator = LimitOffsetPagination()
-        pages = paginator.paginate_queryset(queryset, request)
-        serializer = SubscribeSerializer(
-            pages,
-            many=True,
-            context={'request': request},
-        )
-        return paginator.get_paginated_response(serializer.data)
+        paginator = LimitPagePagination()
+        page = paginator.paginate_queryset(queryset, request)
+        if page:
+            serializer = SubscribeSerializer(
+                page,
+                many=True,
+                context={'request': request},
+            )
+            return paginator.get_paginated_response(serializer.data)
+        return queryset
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
