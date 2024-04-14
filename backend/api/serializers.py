@@ -235,6 +235,7 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         tags = validated_data.pop('tags')
         self.create_ingredients(recipe, ingredients)
         recipe.tags.set(tags)
+        return validated_data
 
     @transaction.atomic
     def create(self, validated_data):
