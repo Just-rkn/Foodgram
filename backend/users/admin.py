@@ -14,10 +14,6 @@ class UserAdmin(admin.ModelAdmin):
         'last_name',
         'is_superuser',
     )
-    list_editable = (
-        'first_name',
-        'last_name',
-    )
     search_fields = (
         'username',
         'email',

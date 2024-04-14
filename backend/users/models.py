@@ -46,7 +46,7 @@ class Subscription(models.Model):
     )
 
     def __str__(self) -> str:
-        return f'{self.follower.username} подписан на {self.author.username}'
+        return f'{self.user.username} подписан на {self.author.username}'
 
     class Meta:
         verbose_name = 'Подписка'

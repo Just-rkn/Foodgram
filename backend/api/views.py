@@ -9,9 +9,9 @@ from rest_framework.response import Response
 from .filters import IngredientFilter, RecipeFilter
 from .pagination import LimitPagePagination
 from .permissions import IsAuthorPermission
-from .serializers import (CreateRecipeSerializer, IngredientSerializer,
-                          RecipeSerializer, ShortRecipeSerializer,
-                          SubscribeSerializer, TagSerializer, UserSerializer)
+from .serializers import (CreateRecipeSerializer, CreateSubscriptionSerializer,
+                          IngredientSerializer, RecipeSerializer,
+                          ShortRecipeSerializer, TagSerializer, UserSerializer)
 from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
                             ShoppingCart, Tag)
 from users.models import Subscription, User
@@ -40,6 +40,7 @@ class UserViewSet(viewsets.GenericViewSet):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    pagination_class = LimitPagePagination
 
     @action(
         detail=True,
@@ -49,16 +50,23 @@ class UserViewSet(viewsets.GenericViewSet):
     )
     def subscribe(self, request, pk):
         author = get_object_or_404(User, id=pk)
-        if request.method == 'post':
-            serializer = SubscribeSerializer(
-                data={'user': request.user, 'author': author},
-                context={'request': request}
+        if request.method == 'POST':
+            serializer = CreateSubscriptionSerializer(
+                data={'user': request.user.id, 'author': pk},
+                context={'request': request},
             )
             serializer.is_valid(raise_exception=True)
-            serializer.save(user=request.user, author=author)
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        Subscription.objects.filter(user=request.user, author=author).delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        if Subscription.objects.filter(
+            user=request.user, author=author
+        ).exists():
+            subscription = get_object_or_404(
+                Subscription, user=request.user, author=author
+            )
+            subscription.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
     @action(
         detail=False,
@@ -68,16 +76,13 @@ class UserViewSet(viewsets.GenericViewSet):
     )
     def subscriptions(self, request):
         queryset = Subscription.objects.filter(user=request.user)
-        paginator = LimitPagePagination()
-        page = paginator.paginate_queryset(queryset, request)
-        if page:
-            serializer = SubscribeSerializer(
-                page,
-                many=True,
-                context={'request': request},
-            )
-            return paginator.get_paginated_response(serializer.data)
-        return queryset
+        page = self.paginate_queryset(queryset)
+        serializer = CreateSubscriptionSerializer(
+            page,
+            many=True,
+            context={'request': request},
+        )
+        return self.get_paginated_response(serializer.data)
 
 
 class RecipeViewSet(viewsets.ModelViewSet):

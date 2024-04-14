@@ -10,12 +10,13 @@ class RecipeAdmin(admin.ModelAdmin):
         'name', 'author', 'cooking_time', 'pub_date', 'favorite_count',
     )
     list_filter = ('author',)
+    search_fields = ('name', 'author',)
 
     @admin.display(
         description='Количетсво добавлений'
     )
     def favorite_count(self, obj):
-        return obj.in_favorites.count()
+        return obj.favorites.count()
 
 
 @admin.register(Tag)
@@ -32,15 +33,17 @@ class IngredientAdmin(admin.ModelAdmin):
 
 @admin.register(Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
-    list_display = ('user', 'recipe')
+    list_display = ('user', 'recipe',)
+    search_fields = ('user', 'recipe',)
 
 
 @admin.register(ShoppingCart)
 class ShoppingCartAdmin(admin.ModelAdmin):
     list_display = ('user', 'recipe')
+    search_fields = ('user', 'recipe',)
 
 
 @admin.register(RecipeIngredient)
 class RecipeIngredientAdmin(admin.ModelAdmin):
     list_display = ('recipe', 'ingredient', 'amount',)
-    list_editable = ('amount',)
+    search_fields = ('recipe', 'ingredient',)
