@@ -9,8 +9,8 @@ class RecipeAdmin(admin.ModelAdmin):
     list_display = (
         'name', 'author', 'cooking_time', 'pub_date', 'favorite_count',
     )
-    list_filter = ('author',)
-    search_fields = ('name', 'author',)
+    list_filter = ('author', 'tags',)
+    search_fields = ('name', 'author__username',)
 
     @admin.display(
         description='Количетсво добавлений'
@@ -34,16 +34,16 @@ class IngredientAdmin(admin.ModelAdmin):
 @admin.register(Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
     list_display = ('user', 'recipe',)
-    search_fields = ('user', 'recipe',)
+    search_fields = ('user__username', 'recipe__name',)
 
 
 @admin.register(ShoppingCart)
 class ShoppingCartAdmin(admin.ModelAdmin):
     list_display = ('user', 'recipe')
-    search_fields = ('user', 'recipe',)
+    search_fields = ('user__username', 'recipe__name',)
 
 
 @admin.register(RecipeIngredient)
 class RecipeIngredientAdmin(admin.ModelAdmin):
     list_display = ('recipe', 'ingredient', 'amount',)
-    search_fields = ('recipe', 'ingredient',)
+    search_fields = ('recipe__name', 'ingredient__name',)

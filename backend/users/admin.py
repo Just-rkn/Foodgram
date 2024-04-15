@@ -27,5 +27,5 @@ class UserAdmin(admin.ModelAdmin):
 class SubscriptionAdmin(admin.ModelAdmin):
     """Отображение модели Subscription в админ части сайта."""
 
-    list_display = ('user', 'author')
-    search_fields = ('user', 'author')
+    list_display = ('user', 'author',)
+    search_fields = ('user__username', 'author__username')

@@ -1,8 +1,11 @@
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 from django.db.models import F, Q
 
 MAX_LENGTH_NAME = 150
+
+username_validator = UnicodeUsernameValidator()
 
 
 class User(AbstractUser):
@@ -11,6 +14,12 @@ class User(AbstractUser):
     email = models.EmailField('Почта', unique=True)
     first_name = models.CharField('имя', max_length=MAX_LENGTH_NAME)
     last_name = models.CharField('фамилия', max_length=MAX_LENGTH_NAME)
+    username = models.CharField(
+        'логин',
+        max_length=MAX_LENGTH_NAME,
+        unique=True,
+        validators=(username_validator,),
+    )
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ('username', 'first_name', 'last_name',)
@@ -42,7 +51,7 @@ class Subscription(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name='following',
-        verbose_name='Автор'
+        verbose_name='Автор',
     )
 
     def __str__(self) -> str:
