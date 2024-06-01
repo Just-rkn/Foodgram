@@ -1,16 +1,23 @@
-## Проект foodgram
-
+## Проект Foodgram
 Foodgram - продуктовый помощник с базой кулинарных рецептов.
-Доступен по адресу 158.160.28.231:8000
+
+## Необходимые инструменты
+    Git
+    Docker
 
 ## Технологии:
-
-Python, Django, Django Rest Framework, Docker, Gunicorn, NGINX, PostgreSQL.
+    Python
+    Django
+    Django Rest Framework
+    Docker
+    Gunicorn
+    Nginx
+    PostgreSQL
 
 ## Запуск проекта на локальной машине:
 
 - Клонировать репозиторий:
-https://github.com/justrkn/foodgram-project-react.git
+https://github.com/justrkn/Foodgram.git
 
 - Cоздать файл .env и заполнить своими данными по аналогии с example.env:
 
@@ -26,4 +33,4 @@ https://github.com/justrkn/foodgram-project-react.git
 - sudo docker compose exec backend python manage.py ingredients_upload data/ingredients.csv
 
 ## Автор 
-justrkn
+  Староверов Федор
